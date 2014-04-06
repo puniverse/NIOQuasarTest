@@ -33,9 +33,12 @@ tasks.withType(JavaExec) {
 task(runServer, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.MainIO2'
 }
+task(runAsyncServer, dependsOn: 'classes', type: JavaExec) {
+    main = 'co.paralleluniverse.quasartkb.AsyncServer'
+}
 task(runClients, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.ClientTesters'
 }
-
+//AsyncServer
 defaultTasks 'runServer'
 
