@@ -24,7 +24,8 @@ dependencies {
     quasar "co.paralleluniverse:quasar-core:$quasarVersion"
 }
 
-tasks.withType(JavaExec) { 
+tasks.withType(JavaExec) {
+    standardInput = System.in
     jvmArgs "-javaagent:${configurations.quasar.iterator().next()}";
     classpath = sourceSets.main.runtimeClasspath   
 }
