@@ -26,6 +26,7 @@ public class ClientTesters {
 
         final CountDownLatch cdl = new CountDownLatch(TOTAL);
         System.out.println("starting.. WARMUP="+WARMUP_PERIOD+" DUARTION="+DURATION+" RATE="+REQ_PER_SEC);
+        long start = System.nanoTime();        
         for (int i = 0; i < TOTAL; i++) {
             rl.acquire();
             new Fiber<Void>(() -> {
@@ -41,6 +42,7 @@ public class ClientTesters {
             }).start();
         }
         cdl.await();
-        System.out.println("finished " + ai + " out of "+TOTAL);
+        long duration = System.nanoTime() - start;        
+        System.out.println("finished " + ai + " out of "+TOTAL + " in "+TimeUnit.NANOSECONDS.toMillis(duration));
     }
 }
