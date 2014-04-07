@@ -25,13 +25,18 @@ dependencies {
 }
 
 tasks.withType(JavaExec) {
-    standardInput = System.in
+    //standardInput = System.in
     jvmArgs "-javaagent:${configurations.quasar.iterator().next()}";
     classpath = sourceSets.main.runtimeClasspath   
 }
 
 task(runServer, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.MainIO2'
+    systemProperty "co.paralleluniverse.useFJ", "false"
+}
+task(runServerFJ, dependsOn: 'classes', type: JavaExec) {
+    main = 'co.paralleluniverse.quasartkb.MainIO2'
+    systemProperty "co.paralleluniverse.useFJ", "true"
 }
 task(runAsyncServer, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.AsyncServer'

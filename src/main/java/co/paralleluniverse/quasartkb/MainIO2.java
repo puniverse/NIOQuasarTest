@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadFactory;
 public class MainIO2 {
     static final int PORT = 1234;
     static final Charset charset = Charset.forName("UTF-8");
-    static final boolean FJ_SCHEDULER = true;
+    static final boolean FJ_SCHEDULER = Boolean.parseBoolean(System.getProperty("co.paralleluniverse.useFJ", "false"));
     
     public static void main(String[] args) throws Exception {
         ThreadFactory tfactory = new ThreadFactoryBuilder().setDaemon(true).setNameFormat("nio-%d").build();
@@ -47,9 +47,9 @@ public class MainIO2 {
                 e.printStackTrace();
             }
         }).start();
-
-        System.out.println("Press Enter to quit");
-        System.in.read();
-        System.exit(0);
+        System.out.println("started");
+        //System.out.println("Press Enter to quit");
+        //System.in.read();
+        //System.exit(0);
     }
 }

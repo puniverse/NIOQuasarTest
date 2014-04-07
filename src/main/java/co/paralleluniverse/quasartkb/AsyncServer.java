@@ -21,6 +21,7 @@ public class AsyncServer {
 
         listener.setOption(StandardSocketOptions.SO_REUSEADDR, true);
         listener.bind(new InetSocketAddress(1234));
+        System.out.println("started");
 
         while (true) {
             listener.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
@@ -79,7 +80,6 @@ public class AsyncServer {
                 }
             });
 
-            System.in.read();
         }
 
     }
