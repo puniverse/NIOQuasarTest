@@ -1,4 +1,5 @@
-#scp to the server, chmod+x and run
+#wget https://raw.githubusercontent.com/puniverse/NIOQuasarTest/master/install.sh
+#chmod+x and run
 
 # install jdk8
 sudo apt-get update
