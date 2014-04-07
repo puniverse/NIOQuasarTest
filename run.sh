@@ -12,11 +12,11 @@ fi
 benchmark()
 {
     echo running $1 configuration
-    echo $1 >> res.log
-    ./gradlew -q $1 > server.log &
-    sleep 1
+    echo >> res.log
+    echo @@@ $1 >> res.log
+    ./gradlew -q $1 > server.log 2>&1 &
     SERVER_PID=$!
-    echo kkkk $SERVER_PID
+    sleep 1
     while [ -z `grep -F "started" server.log` ]; do
         echo -n .
         sleep 1
@@ -24,7 +24,9 @@ benchmark()
     echo  STARTED
     echo launch the clients...
     go run ../gobench/gobench.go -k=false -u http://localhost:1234 -c 500 -t 10 >> res.log
-    pkill -SIGINT -P $SERVER_PID
+    echo launch the clients second time ...
+    go run ../gobench/gobench.go -k=false -u http://localhost:1234 -c 500 -t 10 >> res.log
+    pkill -KILL -P $SERVER_PID
 }
 
 benchmark "runServer" 
