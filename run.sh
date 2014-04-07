@@ -17,7 +17,7 @@ benchmark()
     ./gradlew -q $1 > server.log 2>&1 &
     SERVER_PID=$!
     sleep 1
-    while [ -z `grep -F "started" server.log` ]; do
+    while [ -z `grep -F started server.log | awk '{print $1}'` ]; do
         echo -n .
         sleep 1
     done
@@ -29,8 +29,8 @@ benchmark()
     pkill -KILL -P $SERVER_PID
 }
 
-benchmark "runServer" 
-benchmark "runServerFJ"
+benchmark "runQuasarTP" 
+benchmark "runQuasarFJ"
 benchmark "runAsyncServer"
 cat res.log
 

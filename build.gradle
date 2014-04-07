@@ -29,11 +29,11 @@ tasks.withType(JavaExec) {
     classpath = sourceSets.main.runtimeClasspath   
 }
 
-task(runServer, dependsOn: 'classes', type: JavaExec) {
+task(runQuasarTP, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.MainIO2'
     systemProperty "co.paralleluniverse.useFJ", "false"
 }
-task(runServerFJ, dependsOn: 'classes', type: JavaExec) {
+task(runQuasarFJ, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.MainIO2'
     systemProperty "co.paralleluniverse.useFJ", "true"
 }
@@ -43,6 +43,5 @@ task(runAsyncServer, dependsOn: 'classes', type: JavaExec) {
 task(runClients, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.ClientTesters'
 }
-//AsyncServer
-defaultTasks 'runServer'
+defaultTasks 'runQuasarTP'
 
