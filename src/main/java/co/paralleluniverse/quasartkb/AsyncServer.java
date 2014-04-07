@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 
 public class AsyncServer {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
         ExecutorService executor = Executors.newFixedThreadPool(8);
         AsynchronousChannelGroup asyncChannelGroup = AsynchronousChannelGroup.withThreadPool(executor);
@@ -21,7 +21,6 @@ public class AsyncServer {
 
         listener.setOption(StandardSocketOptions.SO_REUSEADDR, true);
         listener.bind(new InetSocketAddress(1234));
-        System.out.println("started");
 
         while (true) {
             listener.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
@@ -80,6 +79,8 @@ public class AsyncServer {
                 }
             });
 
+            System.out.println("started");
+            Thread.sleep(999999);
         }
 
     }

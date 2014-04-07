@@ -1,31 +1,34 @@
-#!/bin/sh -vx
+#!/bin/sh
 echo start > res.log
 
-echo quasar-non-fj >> res.log
-./gradlew -q runServer > server.log &
-SERVER_PID=$!
-while [ ! `grep -Fp "started" server.log` ]; do
-    sleep 1
-done
-go run ../gobench.go -k=false -u http://localhost:1234 -c 500 -t 10 >> res.log
-kill -9 $SERVER_PID
+ulimit -n 200000
 
-echo quasar-fj >> res.log
-./gradlew -q runServerFJ > server.log &
-SERVER_PID=$!
-while [ ! `grep -Fp "started" server.log` ]; do
-    sleep 1
-done
-go run ../gobench.go -k=false -u http://localhost:1234 -c 500 -t 10 >> res.log
-kill -9 $SERVER_PID
+if [ `netstat -ano|grep 1234 |grep LISTEN|awk '{print $2}'` ]
+then
+    echo port 1234 is in use
+    exit
+fi
 
-echo runAsyncServer >> res.log
-./gradlew -q runAsyncServer > server.log &
-SERVER_PID=$!
-while [ ! `grep -Fp "started" server.log` ]; do
+benchmark()
+{
+    echo running $1 configuration
+    echo $1 >> res.log
+    ./gradlew -q $1 > server.log &
     sleep 1
-done
-go run ../gobench.go -k=false -u http://localhost:1234 -c 500 -t 10 >> res.log
-kill -9 $SERVER_PID
+    SERVER_PID=$!
+    echo kkkk $SERVER_PID
+    while [ -z `grep -F "started" server.log` ]; do
+        echo -n .
+        sleep 1
+    done
+    echo  STARTED
+    echo launch the clients...
+    go run ../gobench/gobench.go -k=false -u http://localhost:1234 -c 500 -t 10 >> res.log
+    pkill -SIGINT -P $SERVER_PID
+}
 
+benchmark "runServer" 
+benchmark "runServerFJ"
+benchmark "runAsyncServer"
 cat res.log
+

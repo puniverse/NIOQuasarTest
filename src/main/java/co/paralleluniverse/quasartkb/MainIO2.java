@@ -48,8 +48,6 @@ public class MainIO2 {
             }
         }).start();
         System.out.println("started");
-        //System.out.println("Press Enter to quit");
-        //System.in.read();
-        //System.exit(0);
+        Thread.sleep(999999);
     }
 }
