@@ -1,5 +1,6 @@
 package co.paralleluniverse.quasartkb;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.StandardSocketOptions;
@@ -8,15 +9,26 @@ import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 public class AsyncServer {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-
-        ExecutorService executor = Executors.newFixedThreadPool(8);
-        AsynchronousChannelGroup asyncChannelGroup = AsynchronousChannelGroup.withThreadPool(executor);
+        int nThreads = 8;
+        ThreadFactory tfactory = new ThreadFactoryBuilder().setDaemon(true).setNameFormat("nio-%d").build();        
+        AsynchronousChannelGroup asyncChannelGroup;
+        switch (System.getProperty("co.paralleluniverse.asyncChannelGroup")) {
+            case "tp":
+                asyncChannelGroup = AsynchronousChannelGroup.withThreadPool(Executors.newFixedThreadPool(nThreads, tfactory));
+                break;
+            case "fixed":
+                asyncChannelGroup = AsynchronousChannelGroup.withFixedThreadPool(nThreads, tfactory);
+                break;
+            case "cached":
+            default:
+                asyncChannelGroup = AsynchronousChannelGroup.withCachedThreadPool(Executors.newCachedThreadPool(tfactory)  , 1);
+        }
         final AsynchronousServerSocketChannel listener = AsynchronousServerSocketChannel.open(asyncChannelGroup);
 
         listener.setOption(StandardSocketOptions.SO_REUSEADDR, true);
