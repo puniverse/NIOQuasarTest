@@ -25,6 +25,8 @@ dependencies {
 }
 
 tasks.withType(JavaExec) {
+    jvmArgs "-XX:+UnlockCommercialFeatures"
+    jvmArgs "-XX:+FlightRecorder"    
     jvmArgs "-javaagent:${configurations.quasar.iterator().next()}";
     classpath = sourceSets.main.runtimeClasspath   
 }
@@ -32,13 +34,16 @@ tasks.withType(JavaExec) {
 task(runQuasarTP, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.MainIO2'
     systemProperty "co.paralleluniverse.useFJ", "false"
+    jvmArgs "-XX:StartFlightRecording=duration=20s,filename=runQuasarTP.jfr"    
 }
 task(runQuasarFJ, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.MainIO2'
     systemProperty "co.paralleluniverse.useFJ", "true"
+    jvmArgs "-XX:StartFlightRecording=duration=20s,filename=runQuasarFJ.jfr"    
 }
 task(runAsyncServer, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.AsyncServer'
+    jvmArgs "-XX:StartFlightRecording=duration=20s,filename=runAsyncServer.jfr"    
 }
 task(runClients, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.ClientTesters'

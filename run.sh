@@ -18,7 +18,7 @@ benchmark()
     SERVER_PID=$!
     sleep 1
     while [ -z `grep -F started server.log | awk '{print $1}'` ]; do
-        echo -n .
+        printf '.'
         sleep 1
     done
     echo  STARTED
