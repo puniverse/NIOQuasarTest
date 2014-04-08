@@ -25,8 +25,8 @@ public class MainIO2 {
         final FiberScheduler scheduler;
         switch (System.getProperty("co.paralleluniverse.scheduler")) {
             case "tp":
-                group = AsynchronousChannelGroup.withFixedThreadPool(nThreads, tfactory);
-                scheduler = new FiberExecutorScheduler("tp", Executors.newFixedThreadPool(nThreads)); // new FiberExecutorScheduler("io", (Executor) group);
+                group = AsynchronousChannelGroup.withFixedThreadPool(1, tfactory);
+                scheduler = new FiberExecutorScheduler("tp", Executors.newCachedThreadPool(tfactory)); // new FiberExecutorScheduler("io", (Executor) group);
                 break;
             case "fj":
                 group = AsynchronousChannelGroup.withFixedThreadPool(nThreads, tfactory);
