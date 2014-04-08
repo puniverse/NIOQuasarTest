@@ -30,6 +30,7 @@ benchmark()
 }
 
 benchmark "runQuasarTP"
+benchmark "runQuasarFJ"
 benchmark "runQuasarIO1"
 benchmark "runQuasarIO2"
 benchmark "runQuasarIO3"
