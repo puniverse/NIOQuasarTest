@@ -8,24 +8,39 @@ import java.net.InetSocketAddress;
 import java.nio.*;
 import java.nio.channels.*;
 import java.nio.charset.*;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 public class MainIO2 {
     static final int PORT = 1234;
     static final Charset charset = Charset.forName("UTF-8");
-    static final boolean FJ_SCHEDULER = Boolean.parseBoolean(System.getProperty("co.paralleluniverse.useFJ", "false"));
-    
+
     public static void main(String[] args) throws Exception {
-        ThreadFactory tfactory = new ThreadFactoryBuilder().setDaemon(true).setNameFormat("nio-%d").build();
-        AsynchronousChannelGroup group = AsynchronousChannelGroup.withFixedThreadPool(1, tfactory);
-        FiberServerSocketChannel socket = FiberServerSocketChannel.open(group).bind(new InetSocketAddress(PORT));
         int processors = Runtime.getRuntime().availableProcessors();
-        
-        final FiberScheduler scheduler = FJ_SCHEDULER
-                ? new FiberForkJoinScheduler("fj", processors)
-                : new FiberExecutorScheduler("tp", Executors.newFixedThreadPool(processors)); // new FiberExecutorScheduler("io", (Executor) group);
-        
+        int nThreads = 8;
+        ThreadFactory tfactory = new ThreadFactoryBuilder().setDaemon(true).setNameFormat("nio-%d").build();
+
+        final AsynchronousChannelGroup group;
+        final FiberScheduler scheduler;
+        switch (System.getProperty("co.paralleluniverse.scheduler")) {
+            case "tp":
+                group = AsynchronousChannelGroup.withFixedThreadPool(1, tfactory);
+                scheduler = new FiberExecutorScheduler("tp", Executors.newFixedThreadPool(nThreads)); // new FiberExecutorScheduler("io", (Executor) group);
+                break;
+            case "fj":
+                group = AsynchronousChannelGroup.withFixedThreadPool(1, tfactory);
+                scheduler = new FiberForkJoinScheduler("fj", nThreads);
+                break;
+            case "io":
+            default:
+                group = AsynchronousChannelGroup.withFixedThreadPool(nThreads, tfactory);
+                scheduler = new FiberExecutorScheduler("tp", (Executor)group);
+                break;
+        }
+
+        FiberServerSocketChannel socket = FiberServerSocketChannel.open(group).bind(new InetSocketAddress(PORT));
+
         new Fiber(scheduler, () -> {
             try {
                 System.out.println("Starting server");

@@ -33,13 +33,18 @@ tasks.withType(JavaExec) {
 
 task(runQuasarTP, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.MainIO2'
-    systemProperty "co.paralleluniverse.useFJ", "false"
-    jvmArgs "-XX:StartFlightRecording=duration=20s,filename=runQuasarTP.jfr"    
+    systemProperty "co.paralleluniverse.scheduler", "tp"
+    //jvmArgs "-XX:StartFlightRecording=duration=20s,filename=runQuasarTP.jfr"    
 }
 task(runQuasarFJ, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.MainIO2'
-    systemProperty "co.paralleluniverse.useFJ", "true"
-    jvmArgs "-XX:StartFlightRecording=duration=20s,filename=runQuasarFJ.jfr"    
+    systemProperty "co.paralleluniverse.scheduler", "fj"
+//    jvmArgs "-XX:StartFlightRecording=duration=20s,filename=runQuasarFJ.jfr"    
+}
+task(runQuasarIO, dependsOn: 'classes', type: JavaExec) {
+    main = 'co.paralleluniverse.quasartkb.MainIO2'
+    systemProperty "co.paralleluniverse.scheduler", "io"
+//    jvmArgs "-XX:StartFlightRecording=duration=20s,filename=runQuasarFJ.jfr"    
 }
 task(runAsyncServerTP, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.AsyncServer'
