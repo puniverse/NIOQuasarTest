@@ -30,7 +30,8 @@ benchmark()
 }
 
 benchmark "runQuasarTP"
-benchmark "runQuasarFJ"
-benchmark "runQuasarIO"
+benchmark "runQuasarIO1"
+benchmark "runQuasarIO2"
+benchmark "runQuasarIO3"
 cat res.log
 
