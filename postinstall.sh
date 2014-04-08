@@ -29,3 +29,5 @@ $ go run gobench.go  -k=false -u http://localhost:1234 -c 500 -t 10
 
 Enjoy
 EOF
+cd NIOQuasarTest
+sudo bash -c "./run.sh"
