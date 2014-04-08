@@ -22,7 +22,7 @@ benchmark()
         sleep 1
     done
     echo  STARTED
-    echo launch the clients...
+    echo warm up the server ...
     go run ../gobench/gobench.go -k=false -u http://localhost:1234 -c 500 -t 10 > /dev/null
     echo launch the clients second time ...
     go run ../gobench/gobench.go -k=false -u http://localhost:1234 -c 500 -t 10 >> res.log
@@ -30,6 +30,11 @@ benchmark()
 }
 
 benchmark "runAsyncServerCached"
+benchmark "runAsyncServerFixed"
+benchmark "runQuasarTP"
+benchmark "runQuasarFJ"
+benchmark "runQuasarIO1"
+benchmark "runQuasarIO2"
 benchmark "runQuasarIO3"
 cat res.log
 
