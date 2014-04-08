@@ -23,9 +23,9 @@ benchmark()
     done
     echo  STARTED
     echo launch the clients...
-    go run ../gobench/gobench.go -k=false -u http://localhost:1234 -c 500 -t 10 >> res.log
+    go run ../gobench/gobench.go -k=false -u http://localhost:1234 -c 500 -t 5 >> res.log
     echo launch the clients second time ...
-    go run ../gobench/gobench.go -k=false -u http://localhost:1234 -c 500 -t 10 >> res.log
+    go run ../gobench/gobench.go -k=false -u http://localhost:1234 -c 500 -t 30 >> res.log
     pkill -KILL -P $SERVER_PID
 }
 
