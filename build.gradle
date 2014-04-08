@@ -3,7 +3,7 @@ apply plugin: 'java'
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-ext.quasarVersion = '0.6.0:jdk8'
+ext.quasarVersion = '0.6.0-SNAPSHOT:jdk8'
 ext.comsatVersion = '0.1.1'
 
 
