@@ -1,5 +1,6 @@
 package co.paralleluniverse.quasartkb;
 
+import co.paralleluniverse.common.util.SameThreadExecutor;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -9,6 +10,7 @@ import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
@@ -16,18 +18,28 @@ public class AsyncServer {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         int nThreads = 8;
-        ThreadFactory tfactory = new ThreadFactoryBuilder().setDaemon(true).setNameFormat("nio-%d").build();        
+        ThreadFactory tfactory = new ThreadFactoryBuilder().setDaemon(true).setNameFormat("nio-%d").build();
         AsynchronousChannelGroup asyncChannelGroup;
+        Executor exec;
         switch (System.getProperty("co.paralleluniverse.asyncChannelGroup")) {
             case "tp":
                 asyncChannelGroup = AsynchronousChannelGroup.withThreadPool(Executors.newFixedThreadPool(nThreads, tfactory));
+                exec = SameThreadExecutor.getExecutor();
                 break;
             case "fixed":
                 asyncChannelGroup = AsynchronousChannelGroup.withFixedThreadPool(nThreads, tfactory);
+                exec = SameThreadExecutor.getExecutor();
                 break;
             case "cached":
+                asyncChannelGroup = AsynchronousChannelGroup.withCachedThreadPool(Executors.newCachedThreadPool(tfactory), 1);
+                exec = SameThreadExecutor.getExecutor();
+                break;
+            case "executor":
+                asyncChannelGroup = AsynchronousChannelGroup.withFixedThreadPool(1, tfactory);
+                exec = Executors.newCachedThreadPool();
             default:
-                asyncChannelGroup = AsynchronousChannelGroup.withCachedThreadPool(Executors.newCachedThreadPool(tfactory)  , 1);
+                throw new AssertionError();
+
         }
         final AsynchronousServerSocketChannel listener = AsynchronousServerSocketChannel.open(asyncChannelGroup);
 
@@ -38,7 +50,7 @@ public class AsyncServer {
             listener.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
                 @Override
                 public void completed(AsynchronousSocketChannel connection, Void v) {
-                    listener.accept(null, this);            
+                    listener.accept(null, this);
                     final ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
 
                     connection.read(buffer, connection, new CompletionHandler<Integer, AsynchronousSocketChannel>() {
