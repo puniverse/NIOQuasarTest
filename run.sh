@@ -34,8 +34,8 @@ benchmark "runAsyncServerFixed"
 benchmark "runAsyncServerExecutor"
 benchmark "runQuasarTP"
 benchmark "runQuasarFJ"
+benchmark "runQuasarFJ2"
 benchmark "runQuasarIO1"
 benchmark "runQuasarIO2"
-benchmark "runQuasarIO3"
 cat res.log
 

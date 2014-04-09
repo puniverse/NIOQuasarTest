@@ -50,9 +50,9 @@ task(runQuasarIO2, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.MainIO2'
     systemProperty "co.paralleluniverse.scheduler", "io2"
 }
-task(runQuasarIO3, dependsOn: 'classes', type: JavaExec) {
+task(runQuasarFJ2, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.MainIO2'
-    systemProperty "co.paralleluniverse.scheduler", "io3"
+    systemProperty "co.paralleluniverse.scheduler", "fj2"
 }
 task(runAsyncServerTP, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.AsyncServer'

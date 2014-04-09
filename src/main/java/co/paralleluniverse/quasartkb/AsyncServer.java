@@ -16,12 +16,21 @@ import java.util.concurrent.ThreadFactory;
 
 public class AsyncServer {
 
+    static void dump(String op) {
+//        System.err.println("T: " + Thread.currentThread().getName() + " Op: " + op);
+//        Thread.dumpStack();
+    }
+
     public static void main(String[] args) throws IOException, InterruptedException {
+        String config;
+        // config = System.getProperty("co.paralleluniverse.asyncChannelGroup");
+        config = "cached";
         int nThreads = 8;
         ThreadFactory tfactory = new ThreadFactoryBuilder().setDaemon(true).setNameFormat("nio-%d").build();
+        ThreadFactory tfactory2 = new ThreadFactoryBuilder().setDaemon(true).setNameFormat("nio-wt-%d").build();
         AsynchronousChannelGroup asyncChannelGroup;
         Executor exec;
-        switch (System.getProperty("co.paralleluniverse.asyncChannelGroup")) {
+        switch (config) {
             case "tp":
                 asyncChannelGroup = AsynchronousChannelGroup.withThreadPool(Executors.newFixedThreadPool(nThreads, tfactory));
                 exec = SameThreadExecutor.getExecutor();
@@ -31,12 +40,12 @@ public class AsyncServer {
                 exec = SameThreadExecutor.getExecutor();
                 break;
             case "cached":
-                asyncChannelGroup = AsynchronousChannelGroup.withCachedThreadPool(Executors.newCachedThreadPool(tfactory), 0);
+                asyncChannelGroup = AsynchronousChannelGroup.withCachedThreadPool(Executors.newCachedThreadPool(tfactory2), 0);
                 exec = SameThreadExecutor.getExecutor();
                 break;
             case "executor":
                 asyncChannelGroup = AsynchronousChannelGroup.withFixedThreadPool(1, tfactory);
-                exec = Executors.newCachedThreadPool();
+                exec = Executors.newCachedThreadPool(tfactory2);
                 break;
             default:
                 throw new AssertionError();
@@ -51,6 +60,7 @@ public class AsyncServer {
             listener.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
                 @Override
                 public void completed(AsynchronousSocketChannel connection, Void v) {
+                    dump("accept");
                     exec.execute(() -> {
                         listener.accept(null, this);
                         final ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
@@ -58,6 +68,7 @@ public class AsyncServer {
                         connection.read(buffer, connection, new CompletionHandler<Integer, AsynchronousSocketChannel>() {
                             @Override
                             public void completed(Integer result, final AsynchronousSocketChannel readAttachment) {
+                                dump("read");
                                 exec.execute(() -> {
                                     if (result == -1) {
                                         try {
@@ -77,6 +88,7 @@ public class AsyncServer {
                                     readAttachment.write(responseBuffer, responseBuffer, new CompletionHandler<Integer, ByteBuffer>() {
                                         @Override
                                         public void completed(Integer result, ByteBuffer writeAttachment) {
+                                            dump("write");
                                             exec.execute(() -> {
                                                 if (writeAttachment.hasRemaining()) {
                                                     readAttachment.write(writeAttachment, writeAttachment, this);
@@ -89,6 +101,7 @@ public class AsyncServer {
                                                 }
                                             });
                                         }
+
                                         @Override
                                         public void failed(Throwable t, ByteBuffer bbAttachment) {
                                         }

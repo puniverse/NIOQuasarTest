@@ -34,15 +34,15 @@ public class MainIO2 {
                 break;
             case "io1":
                 group = AsynchronousChannelGroup.withFixedThreadPool(nThreads, tfactory);
-                scheduler = new FiberExecutorScheduler("tp", (Executor)group);
+                scheduler = new FiberExecutorScheduler("tp", (Executor) group);
                 break;
             case "io2":
                 group = AsynchronousChannelGroup.withCachedThreadPool(Executors.newCachedThreadPool(), 0);
-                scheduler = new FiberExecutorScheduler("tp", (Executor)group);
+                scheduler = new FiberExecutorScheduler("tp", (Executor) group);
                 break;
-            case "io3":
-                group = AsynchronousChannelGroup.withCachedThreadPool(Executors.newCachedThreadPool(), 1);
-                scheduler = new FiberExecutorScheduler("tp", (Executor)group);
+            case "fj2":
+                scheduler = new FiberForkJoinScheduler("fj", nThreads);
+                group = AsynchronousChannelGroup.withCachedThreadPool(((FiberForkJoinScheduler) scheduler).getForkJoinPool(), 0);
                 break;
             default:
                 throw new AssertionError();
