@@ -23,8 +23,8 @@ public class AsyncServer {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         String config;
-        // config = System.getProperty("co.paralleluniverse.asyncChannelGroup");
-        config = "cached";
+        config = System.getProperty("co.paralleluniverse.asyncChannelGroup");
+        // config = "cached";
         int nThreads = 8;
         ThreadFactory tfactory = new ThreadFactoryBuilder().setDaemon(true).setNameFormat("nio-%d").build();
         ThreadFactory tfactory2 = new ThreadFactoryBuilder().setDaemon(true).setNameFormat("nio-wt-%d").build();
