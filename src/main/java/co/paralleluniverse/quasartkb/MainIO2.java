@@ -47,7 +47,7 @@ public class MainIO2 {
                 break;
             default:
                 group = null;
-                scheduler = DefaultFiberScheduler.getInstance();
+                scheduler = new FiberForkJoinScheduler("fj", nThreads); // DefaultFiberScheduler.getInstance();
         }
 
         new Fiber(scheduler, () -> {
