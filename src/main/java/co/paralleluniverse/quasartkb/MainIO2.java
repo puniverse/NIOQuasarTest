@@ -23,6 +23,7 @@ public class MainIO2 {
 
         final AsynchronousChannelGroup group;
         final FiberScheduler scheduler;
+
         switch (System.getProperty("co.paralleluniverse.scheduler")) {
             case "tp":
                 group = AsynchronousChannelGroup.withFixedThreadPool(1, tfactory);
@@ -45,7 +46,8 @@ public class MainIO2 {
                 group = AsynchronousChannelGroup.withCachedThreadPool(((FiberForkJoinScheduler) scheduler).getForkJoinPool(), 0);
                 break;
             default:
-                throw new AssertionError();
+                group = null;
+                scheduler = DefaultFiberScheduler.getInstance();
         }
 
         FiberServerSocketChannel socket = FiberServerSocketChannel.open(group).bind(new InetSocketAddress(PORT));

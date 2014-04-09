@@ -34,6 +34,10 @@ tasks.withType(JavaExec) {
     classpath = sourceSets.main.runtimeClasspath   
 }
 
+task(runQuasar, dependsOn: 'classes', type: JavaExec) {
+    main = 'co.paralleluniverse.quasartkb.MainIO2'
+    systemProperty "co.paralleluniverse.scheduler", "xxxx"
+}
 task(runQuasarTP, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.MainIO2'
     systemProperty "co.paralleluniverse.scheduler", "tp"

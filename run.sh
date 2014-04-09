@@ -32,10 +32,11 @@ benchmark()
 benchmark "runAsyncServerCached"
 benchmark "runAsyncServerFixed"
 benchmark "runAsyncServerExecutor"
-benchmark "runQuasarTP"
-benchmark "runQuasarFJ"
-benchmark "runQuasarFJ2"
-benchmark "runQuasarIO1"
-benchmark "runQuasarIO2"
+benchmark "runQuasar"
+#benchmark "runQuasarTP"
+#benchmark "runQuasarFJ"
+#benchmark "runQuasarFJ2"
+#benchmark "runQuasarIO1"
+#benchmark "runQuasarIO2"
 cat res.log
 
