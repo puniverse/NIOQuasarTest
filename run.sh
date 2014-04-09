@@ -31,6 +31,7 @@ benchmark()
 
 benchmark "runAsyncServerCached"
 benchmark "runAsyncServerFixed"
+benchmark "runAsyncServerExecutor"
 benchmark "runQuasarTP"
 benchmark "runQuasarFJ"
 benchmark "runQuasarIO1"

@@ -29,7 +29,7 @@ public class MainIO2 {
                 scheduler = new FiberExecutorScheduler("tp", Executors.newCachedThreadPool(tfactory)); // new FiberExecutorScheduler("io", (Executor) group);
                 break;
             case "fj":
-                group = AsynchronousChannelGroup.withFixedThreadPool(nThreads, tfactory);
+                group = AsynchronousChannelGroup.withFixedThreadPool(1, tfactory);
                 scheduler = new FiberForkJoinScheduler("fj", nThreads);
                 break;
             case "io1":

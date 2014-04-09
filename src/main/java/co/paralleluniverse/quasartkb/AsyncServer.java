@@ -50,51 +50,56 @@ public class AsyncServer {
             listener.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
                 @Override
                 public void completed(AsynchronousSocketChannel connection, Void v) {
-                    listener.accept(null, this);
-                    final ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+                    exec.execute(() -> {
+                        listener.accept(null, this);
+                        final ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
 
-                    connection.read(buffer, connection, new CompletionHandler<Integer, AsynchronousSocketChannel>() {
-                        @Override
-                        public void completed(Integer result, final AsynchronousSocketChannel readAttachment) {
-                            if (result == -1) {
-                                try {
-                                    readAttachment.close();
-                                } catch (IOException e) {
-                                }
-                            }
-
-                            String response = "HTTP/1.0 200 OK\r\n"
-                                    + "Date: Fri, 31 Dec 1999 23:59:59 GMT\r\n"
-                                    + "Content-Type: text/html\r\n"
-                                    + "Content-Length: 0\r\n\r\n";
-
-                            buffer.clear();
-                            final ByteBuffer responseBuffer = ByteBuffer.wrap(response.getBytes());
-
-                            readAttachment.write(responseBuffer, responseBuffer, new CompletionHandler<Integer, ByteBuffer>() {
-                                @Override
-                                public void completed(Integer result, ByteBuffer writeAttachment) {
-                                    if (writeAttachment.hasRemaining()) {
-                                        readAttachment.write(writeAttachment, writeAttachment, this);
-                                    } else {
-                                        writeAttachment.clear();
+                        connection.read(buffer, connection, new CompletionHandler<Integer, AsynchronousSocketChannel>() {
+                            @Override
+                            public void completed(Integer result, final AsynchronousSocketChannel readAttachment) {
+                                exec.execute(() -> {
+                                    if (result == -1) {
                                         try {
                                             readAttachment.close();
-                                        } catch (IOException ex) {
+                                        } catch (IOException e) {
                                         }
                                     }
-                                }
 
-                                @Override
-                                public void failed(Throwable t, ByteBuffer bbAttachment) {
-                                }
-                            });
+                                    String response = "HTTP/1.0 200 OK\r\n"
+                                            + "Date: Fri, 31 Dec 1999 23:59:59 GMT\r\n"
+                                            + "Content-Type: text/html\r\n"
+                                            + "Content-Length: 0\r\n\r\n";
 
-                        }
+                                    buffer.clear();
+                                    final ByteBuffer responseBuffer = ByteBuffer.wrap(response.getBytes());
 
-                        @Override
-                        public void failed(Throwable t, AsynchronousSocketChannel scAttachment) {
-                        }
+                                    readAttachment.write(responseBuffer, responseBuffer, new CompletionHandler<Integer, ByteBuffer>() {
+                                        @Override
+                                        public void completed(Integer result, ByteBuffer writeAttachment) {
+                                            exec.execute(() -> {
+                                                if (writeAttachment.hasRemaining()) {
+                                                    readAttachment.write(writeAttachment, writeAttachment, this);
+                                                } else {
+                                                    writeAttachment.clear();
+                                                    try {
+                                                        readAttachment.close();
+                                                    } catch (IOException ex) {
+                                                    }
+                                                }
+                                            });
+                                        }
+                                        @Override
+                                        public void failed(Throwable t, ByteBuffer bbAttachment) {
+                                        }
+                                    });
+                                });
+
+                            }
+
+                            @Override
+                            public void failed(Throwable t, AsynchronousSocketChannel scAttachment) {
+                            }
+                        });
                     });
                 }
 
