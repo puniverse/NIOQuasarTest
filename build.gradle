@@ -8,7 +8,7 @@ ext.comsatVersion = '0.1.1'
 
 
 if (!hasProperty('mainClass')) {
-    ext.mainClass = ''
+    ext.mainClass = 'co.paralleluniverse.quasartkb.MainIO'
 }
 
 repositories {
@@ -32,6 +32,16 @@ tasks.withType(JavaExec) {
 //    jvmArgs "-XX:StartFlightRecording=duration=20s,filename="+name+".jfr"    
     jvmArgs "-javaagent:${configurations.quasar.iterator().next()}";
     classpath = sourceSets.main.runtimeClasspath   
+}
+
+task(run, dependsOn: 'classes', type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    if(project.hasProperty('args')){
+        args project.args.split('\\s+')
+    }
+    if(project.hasProperty('mainClass')){
+        main = project.mainClass
+    }
 }
 
 task(runQuasar, dependsOn: 'classes', type: JavaExec) {
@@ -85,5 +95,6 @@ task(runAsyncServerExecutor, dependsOn: 'classes', type: JavaExec) {
 task(runClients, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.ClientTesters'
 }
-defaultTasks 'runQuasarTP'
+
+defaultTasks 'run'
 
