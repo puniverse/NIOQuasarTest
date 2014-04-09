@@ -50,11 +50,10 @@ public class MainIO2 {
                 scheduler = DefaultFiberScheduler.getInstance();
         }
 
-        FiberServerSocketChannel socket = FiberServerSocketChannel.open(group).bind(new InetSocketAddress(PORT));
-
         new Fiber(scheduler, () -> {
             try {
                 System.out.println("Starting server");
+                FiberServerSocketChannel socket = FiberServerSocketChannel.open(group).bind(new InetSocketAddress(PORT));
                 for (;;) {
                     FiberSocketChannel ch = socket.accept();
                     new Fiber(scheduler, () -> {
