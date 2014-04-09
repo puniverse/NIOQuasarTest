@@ -44,10 +44,18 @@ public class MainIO2 {
             case "fj2":
                 scheduler = new FiberForkJoinScheduler("fj", nThreads);
                 group = AsynchronousChannelGroup.withCachedThreadPool(((FiberForkJoinScheduler) scheduler).getForkJoinPool(), 0);
+                break;            
+            case "fj3":
+                scheduler = new FiberForkJoinScheduler("fj", nThreads);
+                group = AsynchronousChannelGroup.withThreadPool(((FiberForkJoinScheduler) scheduler).getForkJoinPool());
+                break;
+            case "fj4":
+                group = null;
+                scheduler = new FiberForkJoinScheduler("fj", nThreads);
                 break;
             default:
                 group = null;
-                scheduler = new FiberForkJoinScheduler("fj", nThreads); // DefaultFiberScheduler.getInstance();
+                scheduler = DefaultFiberScheduler.getInstance();
         }
 
         new Fiber(scheduler, () -> {
