@@ -37,6 +37,7 @@ public class AsyncServer {
             case "executor":
                 asyncChannelGroup = AsynchronousChannelGroup.withFixedThreadPool(1, tfactory);
                 exec = Executors.newCachedThreadPool();
+                break;
             default:
                 throw new AssertionError();
 
