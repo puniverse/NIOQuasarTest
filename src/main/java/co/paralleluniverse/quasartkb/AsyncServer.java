@@ -31,7 +31,7 @@ public class AsyncServer {
                 exec = SameThreadExecutor.getExecutor();
                 break;
             case "cached":
-                asyncChannelGroup = AsynchronousChannelGroup.withCachedThreadPool(Executors.newCachedThreadPool(tfactory), 1);
+                asyncChannelGroup = AsynchronousChannelGroup.withCachedThreadPool(Executors.newCachedThreadPool(tfactory), 0);
                 exec = SameThreadExecutor.getExecutor();
                 break;
             case "executor":
