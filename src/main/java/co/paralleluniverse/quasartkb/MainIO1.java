@@ -22,8 +22,13 @@ public class MainIO1 {
             try {
                 System.out.println("Starting server");
                 FiberServerSocketChannel socket = FiberServerSocketChannel.open().bind(new InetSocketAddress(PORT));
+                long start = 0;
                 for (;;) {
+                    long elapsed = (System.nanoTime() - start) / 1000000;
+                    if(elapsed > 1000)
+                        System.err.println("XXXXX " + elapsed);
                     FiberSocketChannel ch = socket.accept();
+                    start = System.nanoTime();
                     new Fiber(() -> {
                         try {
                             ByteBuffer buf = ByteBuffer.allocateDirect(1024);
