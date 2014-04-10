@@ -14,8 +14,10 @@ public class MainIO1 {
     static final int PORT = 1234;
     static final Charset charset = Charset.forName("UTF-8");
     static final AtomicInteger counter = new AtomicInteger(0);
-    
+
     public static void main(String[] args) throws Exception {
+        Files.createDirectories(Paths.get("/tmp/dummy/"));
+        
         new Fiber(() -> {
             try {
                 System.out.println("Starting server");
@@ -26,10 +28,10 @@ public class MainIO1 {
                         try {
                             ByteBuffer buf = ByteBuffer.allocateDirect(1024);
                             int n = ch.read(buf);
-                            FiberFileChannel fch = FiberFileChannel.open(Paths.get("/tmp/dummy/", String.valueOf(counter.incrementAndGet())), READ, WRITE, CREATE, TRUNCATE_EXISTING);
-                            buf.flip();
-                            fch.write(buf);
-                            fch.close();
+                            try (FiberFileChannel fch = FiberFileChannel.open(Paths.get("/tmp/dummy/", String.valueOf(counter.incrementAndGet())), CREATE, TRUNCATE_EXISTING, READ, WRITE)) {
+                                buf.flip();
+                                fch.write(buf);
+                            }
 
                             String response = "HTTP/1.0 200 OK\r\nDate: Fri, 31 Dec 1999 23:59:59 GMT\r\nContent-Type: text/html\r\nContent-Length: 0\r\n\r\n";
                             n = ch.write(charset.newEncoder().encode(CharBuffer.wrap(response)));
