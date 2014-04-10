@@ -44,6 +44,14 @@ task(run, dependsOn: 'classes', type: JavaExec) {
     }
 }
 
+task(run1, dependsOn: 'classes', type: JavaExec) {
+    main = 'co.paralleluniverse.quasartkb.MainIO'
+}
+
+task(run2, dependsOn: 'classes', type: JavaExec) {
+    main = 'co.paralleluniverse.quasartkb.MainIO1'
+}
+
 task(runQuasar, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.MainIO2'
     systemProperty "co.paralleluniverse.scheduler", "xxxx"
