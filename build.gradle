@@ -37,8 +37,8 @@ tasks.withType(JavaExec) {
     // systemProperty "sun.nio.ch.internalThreadPoolSize", "2"
     
     // debugging
-    jvmArgs '-ea'
-    systemProperty 'co.paralleluniverse.fibers.verifyInstrumentation', 'true'
+    // jvmArgs '-ea'
+    // systemProperty 'co.paralleluniverse.fibers.verifyInstrumentation', 'true'
 }
 
 task(run, dependsOn: 'classes', type: JavaExec) {
