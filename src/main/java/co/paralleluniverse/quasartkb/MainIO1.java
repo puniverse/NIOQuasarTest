@@ -36,7 +36,6 @@ public class MainIO1 {
                             String response = "HTTP/1.0 200 OK\r\nDate: Fri, 31 Dec 1999 23:59:59 GMT\r\nContent-Type: text/html\r\nContent-Length: 0\r\n\r\n";
                             n = ch.write(charset.newEncoder().encode(CharBuffer.wrap(response)));
                             ch.close();
-                            ch.close();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

@@ -32,7 +32,8 @@ tasks.withType(JavaExec) {
 //    jvmArgs "-XX:FlightRecorderOptions=settings=profile.jfc"
 //    jvmArgs "-XX:StartFlightRecording=duration=20s,filename="+name+".jfr"    
     jvmArgs "-javaagent:${configurations.quasar.iterator().next()}";
-    classpath = sourceSets.main.runtimeClasspath   
+    classpath = sourceSets.main.runtimeClasspath
+    systemProperty "sun.nio.ch.internalThreadPoolSize", "3"
 }
 
 task(run, dependsOn: 'classes', type: JavaExec) {
