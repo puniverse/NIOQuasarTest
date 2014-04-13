@@ -25,15 +25,15 @@ benchmark()
     echo warm up the server ...
     go run ../gobench/gobench.go -k=false -u http://localhost:1234 -c 500 -t 10 > /dev/null
     echo launch the clients second time ...
-    go run ../gobench/gobench.go -k=false -u http://localhost:1234 -c 10000 -t 60 >> res.log
+    go run ../gobench/gobench.go -k=false -u http://localhost:1234 -c 500 -t 10 >> res.log
     pkill -KILL -P $SERVER_PID
 }
 
-benchmark "runAsyncServerFJ"
-benchmark "runAsyncServerCached"
-benchmark "runAsyncServerFixed"
+#benchmark "runAsyncServerFJ"
+#benchmark "runAsyncServerCached"
+#benchmark "runAsyncServerFixed"
 benchmark "run1"
-#benchmark "run2"
+benchmark "run2"
 #benchmark "runAsyncServerExecutor"
 #benchmark "runQuasar"
 #benchmark "runQuasarTP"
