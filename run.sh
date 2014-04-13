@@ -30,10 +30,10 @@ benchmark()
 }
 
 benchmark "runAsyncServerFJ"
+benchmark "runAsyncServerCached"
+benchmark "runAsyncServerFixed"
 benchmark "run1"
 #benchmark "run2"
-#benchmark "runAsyncServerCached"
-#benchmark "runAsyncServerFixed"
 #benchmark "runAsyncServerExecutor"
 #benchmark "runQuasar"
 #benchmark "runQuasarTP"
