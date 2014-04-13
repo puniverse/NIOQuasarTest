@@ -91,6 +91,10 @@ task(runQuasarFJ4, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.MainIO2'
     systemProperty "co.paralleluniverse.scheduler", "fj4"
 }
+task(runAsyncServerFJ, dependsOn: 'classes', type: JavaExec) {
+    main = 'co.paralleluniverse.quasartkb.AsyncServer'
+    systemProperty "co.paralleluniverse.asyncChannelGroup", "fj"
+}
 task(runAsyncServerTP, dependsOn: 'classes', type: JavaExec) {
     main = 'co.paralleluniverse.quasartkb.AsyncServer'
     systemProperty "co.paralleluniverse.asyncChannelGroup", "tp"

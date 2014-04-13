@@ -31,6 +31,10 @@ public class AsyncServer {
         AsynchronousChannelGroup asyncChannelGroup;
         Executor exec;
         switch (config) {
+            case "fj":
+                asyncChannelGroup = AsynchronousChannelGroup.withThreadPool(Executors.newWorkStealingPool(nThreads));
+                exec = SameThreadExecutor.getExecutor();
+                break;
             case "tp":
                 asyncChannelGroup = AsynchronousChannelGroup.withThreadPool(Executors.newFixedThreadPool(nThreads, tfactory));
                 exec = SameThreadExecutor.getExecutor();
