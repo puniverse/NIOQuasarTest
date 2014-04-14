@@ -34,7 +34,7 @@ tasks.withType(JavaExec) {
 
     jvmArgs "-javaagent:${configurations.quasar.iterator().next()}";
     classpath = sourceSets.main.runtimeClasspath
-    systemProperty "sun.nio.ch.internalThreadPoolSize", "1"
+    systemProperty "sun.nio.ch.internalThreadPoolSize", "3"
     
     // debugging
     // jvmArgs '-ea'
