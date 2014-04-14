@@ -30,7 +30,7 @@ benchmark()
 }
 
 benchmark "runAsyncServerFJ"
-benchmark "runAsyncServerCached"
+#benchmark "runAsyncServerCached"
 benchmark "runAsyncServerFixed"
 benchmark "run1"
 #benchmark "run2"
