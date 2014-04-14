@@ -29,11 +29,11 @@ benchmark()
     pkill -KILL -P $SERVER_PID
 }
 
-#benchmark "runAsyncServerFJ"
-#benchmark "runAsyncServerCached"
-#benchmark "runAsyncServerFixed"
+benchmark "runAsyncServerFJ"
+benchmark "runAsyncServerCached"
+benchmark "runAsyncServerFixed"
 benchmark "run1"
-benchmark "run2"
+#benchmark "run2"
 #benchmark "runAsyncServerExecutor"
 #benchmark "runQuasar"
 #benchmark "runQuasarTP"
